@@ -1,0 +1,250 @@
+import type {
+  User,
+  Student,
+  Tutor,
+  Request,
+  StudentStats,
+  TutorStats,
+  AdminStats,
+  CreateTutorFormData,
+} from '../types/main';
+
+// Mock users for testing
+export const MOCK_USERS: User[] = [
+  {
+    id: '1',
+    email: 'student@test.com',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    role: 'student',
+    phoneNumber: '+1234567890',
+    institution: 'UKZN',
+    level: 'third-year',
+    profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '2',
+    email: 'tutor@test.com',
+    firstName: 'Michael',
+    lastName: 'Chen',
+    role: 'tutor',
+    phoneNumber: '+1234567891',
+    profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '3',
+    email: 'admin@test.com',
+    firstName: 'Emma',
+    lastName: 'Williams',
+    role: 'admin',
+    phoneNumber: '+1234567892',
+    profileImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '4',
+    email: 'tutor2@test.com',
+    firstName: 'David',
+    lastName: 'Martinez',
+    role: 'tutor',
+    phoneNumber: '+1234567893',
+    profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '5',
+    email: 'student2@test.com',
+    firstName: 'Jessica',
+    lastName: 'Lee',
+    role: 'student',
+    phoneNumber: '+1234567894',
+    institution: 'DUT',
+    level: 'second-year',
+    profileImage: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+// Extended student data
+export const STUDENT_DATA: Record<string, Student> = {
+  '1': {
+    ...(MOCK_USERS[0] as User),
+    role: 'student',
+    institution: 'UKZN',
+    level: 'third-year',
+    totalRequests: 5,
+    completedRequests: 3,
+  },
+  '5': {
+    ...(MOCK_USERS[4] as User),
+    role: 'student',
+    institution: 'DUT',
+    level: 'second-year',
+    totalRequests: 2,
+    completedRequests: 1,
+  },
+};
+
+// Extended tutor data
+export const TUTOR_DATA: Record<string, Tutor> = {
+  '2': {
+    ...(MOCK_USERS[1] as User),
+    role: 'tutor',
+    subjects: ['Economics', 'Finance', 'Accounting'],
+    bio: 'Experienced economics and finance tutor with 5+ years of teaching experience. Specializing in microeconomics, macroeconomics, and financial analysis.',
+    rating: 4.8,
+    totalEarnings: 2500,
+    assignedRequests: 4,
+    completedRequests: 12,
+    createdByAdmin: true,
+  },
+  '4': {
+    ...(MOCK_USERS[3] as User),
+    role: 'tutor',
+    subjects: ['Research Writing', 'Data Analysis'],
+    bio: 'PhD candidate with expertise in research methodology and statistical analysis. Passionate about helping students with their research projects.',
+    rating: 4.9,
+    totalEarnings: 1800,
+    assignedRequests: 2,
+    completedRequests: 8,
+    createdByAdmin: true,
+  },
+};
+
+// Mock requests
+export const MOCK_REQUESTS: Request[] = [
+  {
+    id: 'req-1',
+    studentId: '1',
+    studentName: 'Sarah Johnson',
+    serviceType: 'Research Proposal & Dissertation',
+    module: 'Economics',
+    title: 'Literature Review for Economics Thesis',
+    description: 'Need help structuring and writing a comprehensive literature review for my master\'s thesis on behavioral economics.',
+    attachments: ['thesis-outline.pdf', 'reference-list.docx'],
+    status: 'assigned',
+    tutorId: '2',
+    tutorName: 'Michael Chen',
+    assignedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'req-2',
+    studentId: '1',
+    studentName: 'Sarah Johnson',
+    serviceType: 'Assignments & Project Assistance',
+    module: 'Finance',
+    title: 'Financial Modeling Assignment',
+    description: 'Need assistance with Excel financial modeling assignment, including DCF analysis and sensitivity analysis.',
+    attachments: ['assignment-brief.pdf'],
+    status: 'in-progress',
+    tutorId: '2',
+    tutorName: 'Michael Chen',
+    assignedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'req-3',
+    studentId: '1',
+    studentName: 'Sarah Johnson',
+    serviceType: 'One-on-One Consultation',
+    module: 'Economics',
+    title: 'Microeconomics Midterm Prep',
+    description: 'Looking for help preparing for upcoming midterm exam covering consumer theory, producer theory, and market structures.',
+    attachments: ['practice-problems.pdf', 'lecture-notes.pdf'],
+    status: 'completed',
+    tutorId: '2',
+    tutorName: 'Michael Chen',
+    assignedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    completedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    workAttachments: ['solution-guide.pdf', 'study-tips.pdf'],
+    createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'req-4',
+    studentId: '1',
+    studentName: 'Sarah Johnson',
+    serviceType: 'Proof Reading & Editing',
+    module: 'Economics',
+    title: 'Essay Proofreading',
+    description: 'Need proofreading and editing for my 3000-word essay on international trade policies.',
+    attachments: ['essay-draft.docx'],
+    status: 'pending',
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'req-5',
+    studentId: '5',
+    studentName: 'Jessica Lee',
+    serviceType: 'Assignments & Project Assistance',
+    module: 'Supply Chain Management',
+    title: 'SPSS Statistical Analysis',
+    description: 'Need help with SPSS software for analyzing survey data and interpreting regression results.',
+    attachments: ['survey-data.csv', 'research-questions.pdf'],
+    status: 'assigned',
+    tutorId: '4',
+    tutorName: 'David Martinez',
+    assignedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'req-6',
+    studentId: '5',
+    studentName: 'Jessica Lee',
+    serviceType: 'Literature Review',
+    module: 'Logistics Management',
+    title: 'Business Plan Development',
+    description: 'Looking for guidance on developing a comprehensive business plan for my entrepreneurship course.',
+    attachments: ['business-idea.pdf'],
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+// Mock student stats
+export const MOCK_STUDENT_STATS: StudentStats = {
+  totalRequests: 4,
+  pendingRequests: 1,
+  assignedRequests: 2,
+  completedRequests: 1,
+};
+
+// Mock tutor stats
+export const MOCK_TUTOR_STATS: TutorStats = {
+  assignedRequests: 2,
+  inProgressRequests: 1,
+  completedRequests: 1,
+  totalEarnings: 2500,
+  averageRating: 4.8,
+};
+
+// Mock admin stats
+export const MOCK_ADMIN_STATS: AdminStats = {
+  totalUsers: 5,
+  totalStudents: 2,
+  totalTutors: 2,
+  totalRequests: 6,
+  pendingRequests: 2,
+  completedRequests: 1,
+};
+
+// Export mock users for quick login
+export const QUICK_LOGIN_USERS = MOCK_USERS.slice(0, 3).map(user => ({
+  email: user.email,
+  password: 'password',
+  role: user.role,
+  name: `${user.firstName} ${user.lastName}`,
+}));
